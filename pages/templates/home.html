@@ -6,6 +6,10 @@
   <div class="container">
     <h1 style="color:rgb(13, 110, 253);" class="display-6 fw-bold mb-2">CS Fishbowl Tutoring</h1>
     <p style="color:rgb(13, 110, 253);" class="lead mb-0">Find a TA by course or day and drop in during posted hours.</p>
+    <p></p>
+    {% if request.user.is_authenticated %}
+      <button type="submit" class="btn btn-outline-light btn-sm" style="background-color:rgb(13, 110, 253);">Make Post</button>
+    {% endif %}
   </div>
 </section>
 {% endblock %}
