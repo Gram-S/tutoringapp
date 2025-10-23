@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Tutoring Schedule · CS Fishbowl{% endblock %}
+
+{% block hero %}
+<section class="bg-gradient text-white py-5 shadow-sm">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-2">CS Fishbowl Tutoring</h1>
+    <p class="lead mb-0">Find a TA by course or day and drop in during posted hours.</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<form class="row g-3 align-items-end mb-4">
+  <div class="col-sm-4">
+    <label class="form-label">Course</label>
+    <select class="form-select" name="course">
+      <option value="">All Courses</option>
+      {% for c in courses %}
+        <option value="{{ c.code }}" {% if request.GET.course == c.code %}selected{% endif %}>
+          {{ c.code }} — {{ c.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Day</label>
+    <select class="form-select" name="day">
+      <option value="">Any day</option>
+      {% for i, d in days %}
+        <option value="{{ i }}" {% if request.GET.day == i|stringformat:'s' %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <button class="btn btn-primary w-100">Filter</button>
+  </div>
+  <div class="col-sm-2">
+    <a class="btn btn-outline-secondary w-100" href="/">Reset</a>
+  </div>
+</form>
+
+{% if slots %}
+  <div class="row g-3">
+    {% for s in slots %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+              <div class="avatar bg-primary text-white fw-bold me-3">{{ s.ta|slice:":1"|upper }}</div>
+              <div>
+                <a class="stretched-link text-decoration-none fw-semibold" href="{% url 'ta_detail' s.ta_username %}">
+                  {{ s.ta }}
+                </a>
+                <div class="text-muted small">Tutors: {{ s.courses|join:", " }}</div>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="badge text-bg-light border">{{ s.day }}</span>
+              <span class="badge text-bg-primary">{{ s.start }}–{{ s.end }}</span>
+              <span class="badge text-bg-secondary">Fishbowl</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="text-center text-muted py-5">
+    <p class="mb-1 fs-5">No posted hours match your filters.</p>
+    <p>Try a different course or day.</p>
+  </div>
+{% endif %}
+{% endblock %}
